@@ -57,12 +57,21 @@ func (bc Blockchain) verifyBlock(index uint) bool {
 	block_1 := bc.blocks[index-1]
 	block_2 := bc.blocks[index]
 
+	// verify that the prev_hash field is equal to actual last block hash
 	if block_2.prev_hash != block_1.getBlockHash() {
 		return false
 	}
+
+	// every block hash should begin with this pattern "0" here
 	if block_2.getBlockHash()[0] != '0' {
 		return false
 	}
+
+	// blockchain should be ordered in time
+	if block_2.timestamp < block_1.timestamp {
+		return false
+	}
+
 	return true
 }
 
@@ -109,11 +118,10 @@ func main() {
 
 	addr_1 := sha256.Sum256([]byte("ADRESS 1"))
 	addr_2 := sha256.Sum256([]byte("ADRESS 2"))
-	now := time.Now()
 
 	// Create genesis block
-	genesis_block := initBlock(0, now.UnixNano()).addTransaction(addr_1, addr_2, "This is the first transaction", 1)
-	block_2 := initBlock(0, now.UnixNano()).addTransaction(addr_2, addr_1, "This is the second transaction", 1)
+	genesis_block := initBlock(0, time.Now().UnixNano()).addTransaction(addr_1, addr_2, "This is the first transaction", 1)
+	block_2 := initBlock(0, time.Now().UnixNano()).addTransaction(addr_2, addr_1, "This is the second transaction", 1)
 	block_2.setHash(genesis_block.getBlockHash())
 	// Push genesis block
 	blockchain.addBlock(genesis_block)
