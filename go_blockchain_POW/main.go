@@ -3,6 +3,7 @@ package main
 // imports
 import (
 	"crypto/sha256"
+	"fmt"
 	"time"
 )
 
@@ -63,7 +64,7 @@ func (bc Blockchain) verifyBlock(index uint) bool {
 	}
 
 	// every block hash should begin with this pattern "0" here
-	if block_2.getBlockHash()[0] != '0' {
+	if block_2.getBlockHash()[0] != 8 {
 		return false
 	}
 
@@ -134,7 +135,7 @@ func main() {
 	- the nonce of each block has to be chosen to make the block's hash begin by the null character (proof of work by spoofing)
 	- TODO : adjustable difficulty = number of hash bytes that should be 0 or another constant pattern
 	- TODO : refactor code
-	- TODO :  add MerkleTrees and better data visualisation/manipulation
+	- TODO :  add MerkleTrees for transactions checking and better data visualisation/manipulation
 
 	*/
 
@@ -146,5 +147,7 @@ func main() {
 
 	// it should be correct now
 	println(blockchain.verifyBlock(1))
+	hash := blockchain.blocks[1].getBlockHash()
+	fmt.Println(hash)
 
 }
